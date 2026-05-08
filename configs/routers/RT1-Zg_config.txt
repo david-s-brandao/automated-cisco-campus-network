@@ -1,0 +1,306 @@
+Building configuration...
+
+
+  
+Current configuration : 6496 bytes
+!
+! Last configuration change at 13:36:25 UTC Mon Feb 16 2026 by cisco
+! NVRAM config last updated at 13:36:31 UTC Mon Feb 16 2026 by cisco
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname RT1-ZG-777
+!
+boot-start-marker
+boot-end-marker
+!
+!
+security passwords min-length 10
+enable secret 5 $1$EbOB$8ef/nzT2x2.2W90Y.Ppsj.
+!
+no aaa new-model
+memory-size iomem 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name isepacademy.ccna.itn.com
+ip host RT1-Pl 172.20.11.113
+ip host SW1-St 172.20.13.242
+ip host RT1-St 172.20.13.241
+ip host RTVi-Zg 172.20.7.62
+ip host WLC1-Zg 172.20.7.6
+ip host AP1-Zg 172.20.7.131
+ip host PCA 172.20.5.3
+ip host PCB 172.20.4.3
+ip host DHCP-SRV 172.20.7.67
+ip host AP1-Pl 172.20.11.98
+ip host PCC 172.20.10.130
+ip host AP1-St 172.20.13.226
+ip host PCD 172.20.12.2
+ip host RT1-Zg 172.20.7.193
+ip host MLS1-Zg 172.20.7.194
+ip host MLS2-Zg 172.20.7.198
+ip host SW1-Zg 172.20.7.8
+ip host SW2-Zg 172.20.7.9
+ip host SW1-Pl 172.20.11.114
+ip cef
+login block-for 300 attempts 3 within 120
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+!
+vxml logging-tag
+license udi pid CISCO2911/K9 sn FCZ160270GA
+license accept end user agreement
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package uck9
+!
+!
+vtp mode transparent
+username cisco privilege 15 secret 5 $1$EzJp$jCvCXt.QHqK8Pk6AuT09/0
+!
+redundancy
+!
+!
+!
+!
+!
+! 
+!
+crypto isakmp policy 100
+ encr aes
+ authentication pre-share
+ group 5
+crypto isakmp key z4gr3b$pl1t address 172.16.201.108 
+crypto isakmp key z4gr3bPvl4 address 172.16.201.109 
+!
+!
+crypto ipsec transform-set TSET esp-aes esp-sha-hmac 
+ mode tunnel
+!
+!
+!
+crypto map CROATIA 10 ipsec-isakmp 
+ set peer 172.16.201.109
+ set transform-set TSET 
+ match address GRE_TO_PULA
+crypto map CROATIA 20 ipsec-isakmp 
+ set peer 172.16.201.108
+ set transform-set TSET 
+ match address GRE_TO_SPLIT
+!
+!
+!
+!
+!
+interface Tunnel0
+ description GRE Tunnel to Pula
+ ip address 10.0.0.1 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet0/2
+ tunnel destination 172.16.201.109
+!
+interface Tunnel1
+ description GRE Tunnel to Split
+ ip address 10.0.0.5 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet0/2
+ tunnel destination 172.16.201.108
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ description RT1-Zg to MLS1-Zg
+ ip address 172.20.7.193 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 address FE80::1 link-local
+ ipv6 enable
+!
+interface GigabitEthernet0/0.40
+ ip access-group ACL_VOIP in
+!
+interface GigabitEthernet0/1
+ description RT1-Zg to MLS2-Zg
+ ip address 172.20.7.197 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 address FE80::2 link-local
+ ipv6 enable
+!
+interface GigabitEthernet0/2
+ description Internet Connection    
+ ip address dhcp
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 enable
+ crypto map CROATIA
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+router ospf 100
+ router-id 5.5.5.5
+ network 10.0.0.0 0.0.0.255 area 0
+ network 172.20.7.193 0.0.0.0 area 0
+ network 172.20.7.197 0.0.0.0 area 0
+ default-information originate
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip nat inside source list 1 interface GigabitEthernet0/2 overload
+ip nat inside source static tcp 172.20.7.67 80 interface GigabitEthernet0/2 80
+ip nat inside source static tcp 172.20.7.67 443 interface GigabitEthernet0/2 443
+ip nat inside source static tcp 172.20.7.67 22 interface GigabitEthernet0/2 22
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/2
+ip route 172.20.0.0 255.255.0.0 172.20.7.194
+ip ssh server algorithm encryption aes128-ctr aes256-ctr aes128-cbc 3des-cbc
+ip ssh client algorithm encryption aes128-ctr aes256-ctr aes128-cbc aes256-cbc 3des-cbc
+!
+ip access-list standard ACL_NAT
+ permit 172.20.5.0 0.0.0.255
+ permit 172.20.4.0 0.0.0.255
+ permit 172.20.2.0 0.0.1.255
+ permit 172.20.6.0 0.0.0.255
+ip access-list standard ACL_SNMP
+ permit 172.20.7.70
+ip access-list standard ACL_SSH
+ remark --- Permitir VLAN 6 (Management) ---
+ permit 172.20.7.0 0.0.0.63
+ remark --- Permitir ZAGREB Admin (Vlan 20) ---
+ permit 172.20.5.0 0.0.0.255
+ remark --- Permitir ZAGREB Staff (Vlan 30) ---
+ permit 172.20.4.0 0.0.0.255
+ remark --- Permitir SPLIT Staff (Vlan 30) ---
+ permit 172.20.12.0 0.0.0.127
+ remark --- Permitir PULA Staff (Vlan 30) ---
+ permit 172.20.10.128 0.0.0.127
+ remark --- Bloquear tudo o resto ---
+ deny   any
+!
+ip access-list extended ACL_VOIP
+ permit ip any 172.20.0.0 0.0.255.255
+ permit ip any 10.0.0.0 0.255.255.255
+ permit udp any any eq bootps
+ deny   ip any any
+ip access-list extended GRE_TO_PULA
+ permit gre host 172.16.201.106 host 172.16.201.109
+ deny   ip any any
+ip access-list extended GRE_TO_SPLIT
+ permit gre host 172.16.201.106 host 172.16.201.108
+ deny   ip any any
+!
+logging host 172.20.7.70
+!
+!
+snmp-server community cisco RO ACL_SNMP
+snmp-server community public RO ACL_SNMP
+access-list 1 permit 172.20.0.0 0.0.255.255
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+banner motd ^CC
+######################################################################
+#                                                                    #
+#                        Private Property                            #
+#            Unnauthorized access will not be tolerated              #
+#                           RT1-Zg-777                               #
+#                                                                    #
+######################################################################
+^C
+!
+line con 0
+ logging synchronous
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ access-class ACL_SSH in
+ exec-timeout 0 30
+ login local
+ transport input ssh
+line vty 5 15
+ access-class ACL_SSH in
+ exec-timeout 0 30
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+ntp master 3
+ntp server pool.ntp.org
+!
+end

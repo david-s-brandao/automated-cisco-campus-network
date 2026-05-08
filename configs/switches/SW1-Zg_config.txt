@@ -1,0 +1,446 @@
+Building configuration...
+
+Current configuration : 11998 bytes
+!
+! Last configuration change at 13:41:04 UTC Mon Feb 16 2026 by cisco
+! NVRAM config last updated at 13:41:18 UTC Mon Feb 16 2026 by cisco
+!
+version 15.0
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname SW1-Zg-777
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$8MrF$ZvrRp/A0ICnTI9LUhDVmU0
+!
+username cisco privilege 15 secret 5 $1$At4X$1hNuj6ZBSr8byQLZ9D17P.
+no aaa new-model
+system mtu routing 1500
+!
+!
+no ip domain-lookup
+ip domain-name isepacademy.ccna.itn.com
+ip host SW1-St 172.20.13.242
+ip host RT1-St 172.20.13.241
+ip host SW1-Pl 172.20.11.114
+ip host RT1-Pl 172.20.11.113
+ip host SW2-Zg 172.20.7.9
+ip host SW1-Zg 172.20.7.8
+ip host MLS2-Zg 172.20.7.198
+ip host MLS1-Zg 172.20.7.194
+ip host RT1-Zg 172.20.7.193
+ip host PCD 172.20.12.2
+ip host AP1-St 172.20.13.226
+ip host PCC 172.20.10.130
+ip host AP1-Pl 172.20.11.98
+ip host DHCP-SRV 172.20.7.67
+ip host PCB 172.20.4.3
+ip host PCA 172.20.5.3
+ip host AP1-Zg 172.20.7.131
+ip host WLC1-Zg 172.20.7.7
+ip host RTVi-Zg 172.20.7.62
+login block-for 300 attempts 3 within 120
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+ip ssh version 2
+!
+!
+!
+!
+!
+interface FastEthernet0/1
+ description SRV-DHCP
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 001e.f7e5.6400
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip arp inspection trust
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping trust
+!
+interface FastEthernet0/2
+ description SRV-1
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 0005.73a0.000b
+ switchport port-security mac-address sticky 7069.5aa1.6c46
+ switchport port-security mac-address sticky e070.eac5.7b7e
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip arp inspection trust
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping trust
+!
+interface FastEthernet0/3
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip arp inspection trust
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping trust
+!
+interface FastEthernet0/4
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip arp inspection trust
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping trust
+!
+interface FastEthernet0/5
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ ip arp inspection trust
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping trust
+!
+interface FastEthernet0/6
+ switchport access vlan 6
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky d0c0.bf2f.5e3b
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/7
+ switchport access vlan 20
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky d0c0.bf2f.5e3b
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/8
+ switchport access vlan 20
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/9
+ switchport access vlan 20
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/10
+ description IP-Phone-1001
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/11
+ switchport access vlan 20
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/12
+ switchport access vlan 20
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/13
+ switchport access vlan 20
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/14
+ switchport access vlan 30
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky d0c0.bf2f.5e3b
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/15
+ switchport access vlan 30
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky e070.eac5.7b7e
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/16
+ switchport access vlan 30
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/17
+ switchport access vlan 30
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/18
+ switchport access vlan 30
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/19
+ switchport access vlan 30
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/20
+ switchport access vlan 30
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security maximum 5
+ switchport port-security mac-address sticky
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/21
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/22
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/23
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/24
+ switchport access vlan 99
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet0/1
+ description links to MLS1-2
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,10,20,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface GigabitEthernet0/2
+ description links to MLS1-2
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,10,20,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan6
+ description Management SW1-Zg
+ ip address 172.20.7.8 255.255.255.192
+!
+interface Vlan20
+ description Gestao_Admin_SW1
+ no ip address
+ shutdown
+!
+ip default-gateway 172.20.7.5
+ip http server
+ip http secure-server
+!
+ip access-list standard ACL_SNMP
+ permit 172.20.7.70
+ip access-list standard ACL_SSH
+ remark --- Permitir ZAGREB Admin (Vlan 20) ---
+ permit 172.20.5.0 0.0.0.255
+ remark --- Permitir ZAGREB Staff (Vlan 30) ---
+ permit 172.20.4.0 0.0.0.255
+ remark --- Permitir SPLIT Staff (Vlan 30) ---
+ permit 172.20.12.0 0.0.0.127
+ remark --- Permitir PULA Staff (Vlan 30) ---
+ permit 172.20.10.128 0.0.0.127
+ remark --- Bloquear tudo o resto ---
+ deny   any
+ remark --- Permitir VLAN 6 (Management) ---
+ permit 172.20.7.0 0.0.0.63
+!
+logging host 172.20.7.70
+snmp-server community cisco RO ACL_SNMP
+snmp-server community public RO ACL_SNMP
+!
+banner motd ^C
+######################################################################
+#                                                                    #
+#                        Private Property                            #
+#            Unnauthorized access will not be tolerated              #
+#                           SW1-Zg-777                               #
+#                                                                    #
+######################################################################
+^C
+!
+line con 0
+line vty 0 4
+ exec-timeout 0 30
+ login local
+ transport input ssh
+line vty 5 15
+ exec-timeout 0 30
+ login local
+ transport input ssh
+!
+ntp server 172.20.7.193
+end

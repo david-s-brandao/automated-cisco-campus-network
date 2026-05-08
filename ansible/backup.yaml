@@ -1,0 +1,104 @@
+---
+- name: Network Operations Manager
+  hosts: devices
+  gather_facts: no
+  vars:
+    # Define the output directory variable for easier changes later
+    output_dir: "./network_logs"
+
+  # Interactive Menu
+  vars_prompt:
+    - name: "selected_action"
+      prompt: |
+        -------------------------------------------
+        SELECT OPERATION:
+        1. Backup Configuration (Save to file)
+        2. Write Memory (Save to startup-config)
+        3. Connectivity Check (Ping 8.8.8.8)
+        4. Collect Routing Table
+        9. EXECUTE ALL TASKS
+        -------------------------------------------
+        Enter your choice [1, 2, 3, 4, 9]:
+      private: no
+
+  tasks:
+    # -----------------------------------------------------------------
+    # PREPARATION TASKS
+    # -----------------------------------------------------------------
+    - name: Create local directory for logs and backups
+      file:
+        path: "{{ output_dir }}"
+        state: directory
+      delegate_to: localhost
+      run_once: true
+
+    # -----------------------------------------------------------------
+    # TASK 2: SAVE CONFIGURATION (Write Memory)
+    # -----------------------------------------------------------------
+    - name: Save running configuration to startup-config
+      cisco.ios.ios_command:
+        commands: write memory
+      when: selected_action == '2' or selected_action == '9'
+
+    - name: Confirm save status
+      debug:
+        msg: "Configuration saved successfully on {{ inventory_hostname }}"
+      when: selected_action == '2' or selected_action == '9'
+
+    # -----------------------------------------------------------------
+    # TASK 3: CONNECTIVITY CHECK (Ping)
+    # -----------------------------------------------------------------
+    - name: Execute ping to 8.8.8.8
+      cisco.ios.ios_command:
+        commands: ping 8.8.8.8 repeat 3
+      when: selected_action == '3' or selected_action == '9'
+      register: ping_output
+      ignore_errors: yes
+
+    - name: Display connectivity status
+      debug:
+        msg: "Ping from {{ inventory_hostname }}: {{ 'SUCCESS' if '!!!' in ping_output.stdout[0] else 'FAILURE' }}"
+      when: 
+        - (selected_action == '3' or selected_action == '9')
+        - ping_output.stdout is defined
+
+    # -----------------------------------------------------------------
+    # TASK 4: ROUTING TABLE COLLECTION
+    # -----------------------------------------------------------------
+    - name: Retrieve IP routing table
+      cisco.ios.ios_command:
+        commands: show ip route
+      when: selected_action == '4' or selected_action == '9'
+      register: route_output
+
+    - name: Display IP routing table
+      debug:
+        msg: "{{ route_output.stdout[0] }}"
+      when: 
+        - (selected_action == '4' or selected_action == '9')
+        - route_output.stdout is defined
+
+    # -----------------------------------------------------------------
+    # TASK 1: CONFIGURATION BACKUP
+    # -----------------------------------------------------------------
+    - name: Retrieve running configuration
+      cisco.ios.ios_command:
+        commands: show running-config
+      when: selected_action == '1' or selected_action == '9'
+      register: config_output
+
+    - name: Save configuration to local file
+      copy:
+        content: "{{ config_output.stdout[0] }}"
+        dest: "{{ output_dir }}/{{ inventory_hostname }}_config.txt"
+      delegate_to: localhost
+      when: 
+        - (selected_action == '1' or selected_action == '9')
+        - config_output.stdout is defined
+
+    # -----------------------------------------------------------------
+    # COMPLETION NOTICE
+    # -----------------------------------------------------------------
+    - name: Operation Complete
+      debug:
+        msg: "Tasks completed for {{ inventory_hostname }}"

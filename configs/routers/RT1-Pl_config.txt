@@ -1,0 +1,411 @@
+Building configuration...
+
+
+Current configuration : 9418 bytes
+!
+! Last configuration change at 13:38:05 WET Mon Feb 16 2026 by cisco
+! NVRAM config last updated at 13:38:00 WET Mon Feb 16 2026 by cisco
+! NVRAM config last updated at 13:38:00 WET Mon Feb 16 2026 by cisco
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname RT-Pl-777
+!
+boot-start-marker
+boot-end-marker
+!
+!
+security passwords min-length 10
+enable secret 5 $1$jFBI$QWrtOVWmkTmI6I/q5KkPz/
+!
+no aaa new-model
+!
+clock timezone WET 0 0
+clock summer-time WEST recurring last Sun Mar 1:00 last Sun Oct 2:00
+!
+dot11 syslog
+ip source-route
+!
+!
+ip cef
+!
+ip dhcp excluded-address 172.20.11.97
+ip dhcp excluded-address 172.20.11.113
+ip dhcp excluded-address 172.20.10.129
+ip dhcp excluded-address 172.20.9.1
+ip dhcp excluded-address 172.20.11.1
+ip dhcp excluded-address 172.20.8.254
+ip dhcp excluded-address 172.20.11.94
+ip dhcp excluded-address 172.20.10.126
+ip dhcp excluded-address 172.20.11.114
+ip dhcp excluded-address 172.20.11.98
+ip dhcp excluded-address 172.20.10.130
+!
+ip dhcp pool POOL-VLAN-30
+ network 172.20.10.128 255.255.255.128
+ default-router 172.20.10.129 
+ dns-server 1.1.1.1 
+ domain-name isepacadamy.ccna.itn.com
+!
+ip dhcp pool POOL-VLAN-50
+ network 172.20.9.0 255.255.255.0
+ default-router 172.20.9.1 
+ dns-server 1.1.1.1 
+ domain-name isepacadamy.ccna.itn.com
+!
+ip dhcp pool POOL-VLAN-60
+ network 172.20.11.0 255.255.255.192
+ default-router 172.20.11.1 
+ dns-server 1.1.1.1 
+ domain-name isepacadamy.ccna.itn.com
+!
+ip dhcp pool POOL-VLAN-40
+ network 172.20.11.64 255.255.255.224
+ default-router 172.20.11.65 
+ option 150 ip 172.20.11.65 
+ dns-server 1.1.1.1 
+!
+ip dhcp pool VOICE
+ network 172.20.11.64 255.255.255.248
+ dns-server 172.20.11.65 
+ option 150 ip 172.20.11.65 
+ lease 7
+!
+!
+no ip domain lookup
+ip domain name isepacademy.ccna.itn.com
+ip host MLS2-Zg 172.20.7.198
+ip host MLS1-Zg 172.20.7.194
+ip host RT1-St 172.20.13.241
+ip host DHCP-SRV 172.20.7.67
+ip host RTVi-Zg 172.20.7.62
+ip host WLC1-Zg 172.20.7.6
+ip host AP1-Zg 172.20.7.131
+ip host PCA 172.20.5.3
+ip host PCB 172.20.4.3
+ip host AP1-Pl 172.20.11.98
+ip host PCC 172.20.10.130
+ip host AP1-St 172.20.13.226
+ip host PCD 172.20.12.2
+ip host RT1-Zg 172.20.7.193
+ip host SW1-Zg 172.20.7.8
+ip host SW2-Zg 172.20.7.9
+ip host RT1-Pl 172.20.11.113
+ip host SW1-Pl 172.20.11.114
+ip host SW1-St 172.20.13.242
+login block-for 300 attempts 3 within 120
+ipv6 unicast-routing
+ipv6 cef
+ipv6 dhcp pool POOL-VLAN-30-IPv6-STATEFUL
+ address prefix 2001:B:0:3::/64
+ dns-server 2001:4860:4860::8888
+ domain-name isepacadamy.ccna.itn.com
+!
+ipv6 dhcp pool POOL-VLAN-50-IPv6-STATEFUL
+ address prefix 2001:B:0:1::/64
+ dns-server 2001:4860:4860::8888
+ domain-name isepacadamy.ccna.itn.com
+!
+ipv6 dhcp pool POOL-VLAN-60-IPv6-STATEFUL
+ address prefix 2001:B:0:4::/64
+ dns-server 2001:4860:4860::8888
+ domain-name isepacadamy.ccna.itn.com
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+voice service voip
+ allow-connections h323 to h323
+ allow-connections sip to sip
+!
+!
+!
+!
+!
+voice-card 0
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO2851 sn FCZ10307032
+vtp mode transparent
+username cisco privilege 15 secret 5 $1$JHPI$eQE0/NwDgsjpS0/HvQ/SN0
+!
+redundancy
+!
+!
+! 
+!
+crypto isakmp policy 100
+ encr aes
+ authentication pre-share
+ group 5
+crypto isakmp key Pvl4$pl1t address 172.16.201.108
+crypto isakmp key z4gr3bPvl4 address 172.16.201.106
+!
+!
+crypto ipsec transform-set TSET esp-aes esp-sha-hmac 
+!
+crypto map CROATIA 10 ipsec-isakmp 
+ set peer 172.16.201.106
+ set transform-set TSET 
+ match address GRE_TO_ZAGREB
+crypto map CROATIA 20 ipsec-isakmp 
+ set peer 172.16.201.108
+ set transform-set TSET 
+ match address GRE_TO_SPLIT
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ description Loopback Interface for Design
+ ip address 172.20.11.94 255.255.255.224
+ shutdown
+ ipv6 address 2001:B:0:5::1/64
+!
+interface Loopback2
+ description Loopback Interface for Communication
+ ip address 172.20.10.126 255.255.255.128
+ shutdown
+ ipv6 address 2001:B:0:2::1/64
+!
+interface Tunnel0
+ description Tunnel to Zagreb
+ ip address 10.0.0.2 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet0/0
+ tunnel destination 172.16.201.106
+!
+interface Tunnel1
+ description Tunnel to Split
+ ip address 10.0.0.9 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet0/0
+ tunnel destination 172.16.201.108
+!
+interface GigabitEthernet0/0
+ description Internet Connection
+ ip address dhcp
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 enable
+ crypto map CROATIA
+!
+interface GigabitEthernet0/0.40
+ ip access-group ACL_VOIP in
+!
+interface GigabitEthernet0/1
+ no ip address
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1.5
+ description Default Gateway for VLAN 5
+ encapsulation dot1Q 5
+ ip address 172.20.11.97 255.255.255.240
+ ipv6 address 2001:B:0:6::1/64
+!
+interface GigabitEthernet0/1.6
+ description Default Gateway for VLAN 6
+ encapsulation dot1Q 6
+ ip address 172.20.11.113 255.255.255.240
+ ipv6 address 2001:B:0:7::1/64
+!
+interface GigabitEthernet0/1.7
+ description NATIVE_VLAN
+ encapsulation dot1Q 7 native
+!
+interface GigabitEthernet0/1.30
+ description Default Gateway for VLAN 30
+ encapsulation dot1Q 30
+ ip address 172.20.10.129 255.255.255.128
+ ipv6 address 2001:B:0:3::1/64
+ ipv6 nd managed-config-flag
+ ipv6 dhcp server POOL-VLAN-30-IPv6-STATEFUL
+!
+interface GigabitEthernet0/1.40
+ description Default Gateway for VLAN 40 (VOICE)
+ encapsulation dot1Q 40
+ ip address 172.20.11.65 255.255.255.224
+ ip access-group ACL_VOIP in
+ ipv6 address 2001:B:0:1::1/64
+!
+interface GigabitEthernet0/1.50
+ description Default Gateway for VLAN 50
+ encapsulation dot1Q 50
+ ip address 172.20.9.1 255.255.255.0
+ ipv6 nd managed-config-flag
+ ipv6 dhcp server POOL-VLAN-50-IPv6-STATEFUL
+!
+interface GigabitEthernet0/1.60
+ description Default Gateway for VLAN 60
+ encapsulation dot1Q 60
+ ip address 172.20.11.1 255.255.255.192
+ ip access-group ACL_Guests in
+ ipv6 address 2001:B:0:4::1/64
+ ipv6 nd prefix default no-advertise
+ ipv6 dhcp server POOL-VLAN-6
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ no fair-queue
+ clock rate 125000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 125000
+!
+router ospf 100
+ router-id 3.3.3.3
+ passive-interface GigabitEthernet0/0
+ passive-interface GigabitEthernet0/1
+ network 10.0.0.0 0.0.0.255 area 0
+ network 172.20.0.0 0.0.255.255 area 0
+ default-information originate
+!
+ip forward-protocol nd
+ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list 1 interface GigabitEthernet0/0 overload
+!
+ip access-list standard ACL_NAT
+ permit 172.20.5.0 0.0.0.255
+ permit 172.20.4.0 0.0.0.255
+ permit 172.20.2.0 0.0.1.255
+ permit 172.20.6.0 0.0.0.255
+ip access-list standard ACL_SNMP
+ permit 172.20.7.70
+ip access-list standard ACL_SSH
+ remark --- Permitir VLAN 6 (Management) ---
+ permit 172.20.7.0 0.0.0.63
+ remark --- Permitir ZAGREB Admin (Vlan 20) ---
+ permit 172.20.5.0 0.0.0.255
+ remark --- Permitir ZAGREB Staff (Vlan 30) ---
+ permit 172.20.4.0 0.0.0.255
+ remark --- Permitir SPLIT Staff (Vlan 30) ---
+ permit 172.20.12.0 0.0.0.127
+ remark --- Permitir PULA Staff (Vlan 30) ---
+ permit 172.20.10.128 0.0.0.127
+ remark --- Bloquear tudo o resto ---
+ deny   any
+!
+ip access-list extended ACL_Guests
+ deny   ip any 172.20.0.0 0.0.255.255
+ permit ip any any
+ip access-list extended ACL_VOIP
+ permit ip any 172.20.0.0 0.0.255.255
+ permit ip any 10.0.0.0 0.255.255.255
+ permit udp any any eq bootps
+ deny   ip any any
+ip access-list extended GRE_TO_SPLIT
+ permit gre host 172.16.201.109 host 172.16.201.108
+ deny   ip any any
+ip access-list extended GRE_TO_ZAGREB
+ permit gre host 172.16.201.109 host 172.16.201.106
+ deny   ip any any
+!
+logging 172.20.7.70
+access-list 1 permit 172.20.0.0 0.0.255.255
+!
+!
+!
+!
+snmp-server community cisco RO ACL_SNMP
+snmp-server community public RO ACL_SNMP
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+dial-peer voice 1000 voip
+ description CALLS TO ZAGREB
+ destination-pattern 1...
+ session target ipv4:172.20.7.67
+!
+dial-peer voice 3000 voip
+ description CALLS TO SPLIT
+ destination-pattern 3...
+ session target ipv4:10.0.0.6
+!
+!
+!
+!
+telephony-service
+ max-ephones 2
+ max-dn 10
+ ip source-address 172.20.11.65 port 2000
+ system message PULA-HQ 
+ cnf-file location flash:
+ load 7912 CP7912080004SCCP080108A.sbin
+ max-conferences 8 gain -6
+ call-forward pattern .T
+ transfer-system full-consult
+ transfer-pattern .T
+ create cnf-files version-stamp 7960 Feb 15 2026 22:43:22
+!
+!
+ephone-dn  1
+ number 2001
+!
+!
+ephone  2
+ device-security-mode none
+ mac-address 0016.9D7A.206B
+ button  1:1
+!
+!
+!
+banner motd ^C
+######################################################################
+#                                                                    #
+#                        Private Property                            #
+#            Unnauthorized access will not be tolerated              #
+#                           RT-PL-777                                #
+#                                                                    #
+######################################################################
+^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ access-class ACL_SSH in
+ exec-timeout 0 30
+ login local
+ transport input ssh
+line vty 5 15
+ access-class ACL_SSH in
+ exec-timeout 0 30
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+ntp server 172.20.7.193
+end

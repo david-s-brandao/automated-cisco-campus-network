@@ -1,0 +1,389 @@
+Building configuration...
+
+Current configuration : 10853 bytes
+!
+! Last configuration change at 13:55:20 UTC Mon Feb 16 2026 by cisco
+! NVRAM config last updated at 13:54:48 UTC Mon Feb 16 2026 by cisco
+!
+version 15.0
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname SW1-PL-777
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$2oAK$XSqyps2t4hcwE01JP46HX/
+!
+username cisco privilege 15 secret 5 $1$f97z$P7DHWI3bzWSw6k5ONnfpQ/
+no aaa new-model
+system mtu routing 1500
+ip arp inspection vlan 30
+!
+ip dhcp pool POOL-VLAN-40
+ network 172.20.11.64 255.255.255.224
+ default-router 172.20.11.65 
+ option 150 ip 172.20.11.65 
+!
+!
+ip dhcp snooping vlan 30,50,60
+no ip dhcp snooping information option
+ip dhcp snooping
+no ip domain-lookup
+ip domain-name isepacademy.ccna.itn.com
+ip host SW1-St 172.20.13.242
+ip host RT1-St 172.20.13.241
+ip host SW1-Pl 172.20.11.114
+ip host RT1-Pl 172.20.11.113
+ip host SW2-Zg 172.20.7.9
+ip host SW1-Zg 172.20.7.8
+ip host MLS2-Zg 172.20.7.198
+ip host MLS1-Zg 172.20.7.194
+ip host RT1-Zg 172.20.7.193
+ip host DHCP-SRV 172.20.7.67
+ip host RTVi-Zg 172.20.7.62
+ip host WLC1-Zg 172.20.7.6
+ip host AP1-Zg 172.20.7.131
+ip host PCA 172.20.5.3
+ip host PCB 172.20.4.3
+ip host AP1-Pl 172.20.11.98
+ip host PCC 172.20.10.130
+ip host AP1-St 172.20.13.226
+ip host PCD 172.20.12.2
+login block-for 300 attempts 3 within 120
+!
+!
+crypto pki trustpoint TP-self-signed-714475264
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-714475264
+ revocation-check none
+ rsakeypair TP-self-signed-714475264
+!
+!
+crypto pki certificate chain TP-self-signed-714475264
+ certificate self-signed 01
+  30820229 30820192 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 37313434 37353236 34301E17 0D393330 33303130 30303130 
+  305A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3731 34343735 
+  32363430 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100 
+  AA078C6A D507B896 F9A1CC67 876A43CA 7B7CFE76 7FC715E0 4335E3E5 2EB2CE08 
+  4E89E5FC D1D30F5D 7D172FED 840B70BC B13385EB 324909C0 8C639E53 253C8ADF 
+  5567560D ADB832C3 E01AD121 19FF03D6 307DEF0A 28F27230 9A9392CB A3B5FD18 
+  7494D343 09A11A14 A0CFA288 246B8DD6 6A63E601 F759A500 A5387360 0745AC01 
+  02030100 01A35330 51300F06 03551D13 0101FF04 05300301 01FF301F 0603551D 
+  23041830 1680146C 85803246 247626FB C0D38977 C38C9060 22083830 1D060355 
+  1D0E0416 04146C85 80324624 7626FBC0 D38977C3 8C906022 0838300D 06092A86 
+  4886F70D 01010505 00038181 0020116D 7599E312 7975547F 7DA491AD 6B9A2404 
+  4163EA93 3DE53432 CC0E1375 C41CB4C8 897E5A1B F8D782F3 D493FABA 4DE6F3F7 
+  6892EE34 80EECB01 5F4F607F 7C5EA669 3222562F B4188F2F CCEC366D DAC97B67 
+  6304EDCA 40171852 4AAA99D6 EC03EC0B AF68EB16 1B30988A 67BCDEB8 6C319316 
+  C20C5A29 F8A3694F 9B65D4C2 A6
+  	quit
+!
+!
+!
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/1
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5,6,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface FastEthernet0/2
+ description UPLINK_TO_ROUTER
+ switchport trunk native vlan 7
+ switchport trunk allowed vlan 5-7,30,40,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip dhcp snooping trust
+!
+interface FastEthernet0/3
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/4
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/5
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/6
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/7
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/8
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/9
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/10
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/11
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/12
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/13
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/14
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/15
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security maximum 5
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ switchport port-security
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/16
+ description VOICE_PHONE_ONLY
+ switchport access vlan 40
+ switchport mode access
+ switchport nonegotiate
+ spanning-tree portfast
+!
+interface FastEthernet0/17
+ switchport access vlan 99
+ switchport mode access
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/18
+ switchport access vlan 99
+ switchport mode access
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/19
+ switchport access vlan 99
+ switchport mode access
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/20
+ switchport access vlan 99
+ switchport mode access
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/21
+ switchport access vlan 5
+ switchport trunk native vlan 5
+ switchport trunk allowed vlan 5,50,60
+ switchport mode access
+ switchport nonegotiate
+ ip arp inspection trust
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+ ip dhcp snooping trust
+!
+interface FastEthernet0/22
+ switchport trunk native vlan 5
+ switchport trunk allowed vlan 5,50,60
+ switchport mode trunk
+ switchport nonegotiate
+ ip arp inspection trust
+ ip dhcp snooping trust
+!
+interface FastEthernet0/23
+ switchport access vlan 99
+ switchport mode access
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface FastEthernet0/24
+ switchport access vlan 99
+ switchport mode access
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip dhcp snooping limit rate 5
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan6
+ ip address 172.20.11.114 255.255.255.240
+!
+ip default-gateway 172.20.11.113
+ip http server
+ip http secure-server
+!
+ip access-list standard ACL_SNMP
+ permit 172.20.7.70
+ip access-list standard ACL_SSH
+ remark --- Permitir VLAN 6 (Management) ---
+ permit 172.20.7.0 0.0.0.63
+ remark --- Permitir ZAGREB Admin (Vlan 20) ---
+ permit 172.20.5.0 0.0.0.255
+ remark --- Permitir ZAGREB Staff (Vlan 30) ---
+ permit 172.20.4.0 0.0.0.255
+ remark --- Permitir SPLIT Staff (Vlan 30) ---
+ permit 172.20.12.0 0.0.0.127
+ remark --- Permitir PULA Staff (Vlan 30) ---
+ permit 172.20.10.128 0.0.0.127
+ remark --- Bloquear tudo o resto ---
+ deny   any
+!
+logging host 172.20.7.70
+snmp-server community cisco RO ACL_SNMP
+snmp-server community public RO ACL_SNMP
+!
+vstack
+banner motd ^C
+######################################################################
+#                                                                    #
+#                        Private Property                            #
+#            Unnauthorized access will not be tolerated              #
+#                           SW-PL-777                                #
+#                                                                    #
+######################################################################
+^C
+!
+line con 0
+line vty 0 4
+ access-class ACL_SSH in
+ exec-timeout 0 30
+ login local
+ transport input ssh
+line vty 5 15
+ access-class ACL_SSH in
+ exec-timeout 0 30
+ login local
+ transport input ssh
+!
+ntp server 172.20.7.193
+end
