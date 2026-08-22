@@ -57,6 +57,7 @@ To guarantee data confidentiality across public transit links, Site-to-Site VPN 
 - SIP/SCCP extensions registered locally to maintain call continuity independently of WAN availability
 
 ![VoIP Call Proof of Concept](docs/assets/voip_call_poc.GIF)
+
 *Figure 2: End-to-end VoIP communication test establishing a call between branch extensions using the deployed Cisco CME infrastructure.*
 
 #### Network Address Translation (NAT)
@@ -91,6 +92,7 @@ Rather than relying exclusively on manual CLI administration, the infrastructure
 A dedicated Ansible control node (running on WSL) manages the entire Cisco fleet. This ensures that the desired state of the network is codified, version-controlled, and reproducible across deployment cycles.
 
 ![Ansible Execution Proof](docs/assets/ansible_poc_photo.jpg)
+
 *Figure 3: Real-time execution of Ansible playbooks, showing successful tasks (green) and applied configuration changes (yellow) across the fleet.*
 
 **Implemented Automation Tasks:**
